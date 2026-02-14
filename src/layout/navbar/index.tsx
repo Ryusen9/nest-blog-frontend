@@ -42,7 +42,7 @@ export default function Navbar() {
     >
       <Box className="max-w-7xl z-10000 mx-auto flex items-center justify-between px-4 md:px-0 md:pl-4 bg-bg-primary md:border md:rounded-full">
         <p className="font-russo-one text-2xl">Blog</p>
-        <Box className="items-center hidden lg:flex justify-center gap-5">
+        <Box className="items-center hidden md:flex justify-center gap-5">
           {navLinks.map((link, idx) => (
             <Link key={idx} href={link.href} className="font-sn-pro text-sm">
               {link.name}
@@ -50,7 +50,7 @@ export default function Navbar() {
           ))}
         </Box>
         <Box className="flex gap-2 items-center justify-center">
-          <Link href="/login">
+          <Link href="/login" className="hidden md:block">
             <Button
               className="bg-black! font-sn-pro! text-white! rounded-full! hover:opacity-80! duration-200! cursor-pointer!"
               rightSection={<LogIn size={18} />}
@@ -73,8 +73,18 @@ export default function Navbar() {
         opened={opened}
         onClose={toggle}
         position="right"
-        size="xs"
-        className="bg-bg-primary z-10!"
+        overlayProps={{ opacity: 0, blur: 0 }}
+        withCloseButton={false}
+        styles={{
+          inner: {
+            top: 50,
+            height: "calc(100% - 32px)",
+          },
+          content: {
+            background: "var(--bg-primary)",
+          },
+          body: { padding: 0 },
+        }}
       >
         <MobileMenu />
       </Drawer>
