@@ -1,6 +1,6 @@
 export default function MainBackground({children}: {children: React.ReactNode}) {
   return (
-    <div className="bg-bg-primary min-h-screen w-full">
+    <div className="bg-bg-primary w-full">
       {children}
     </div>
   )

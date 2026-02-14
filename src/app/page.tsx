@@ -1,9 +1,10 @@
-import { Hero } from "./components";
+import { CategoryTags, Hero } from "./components";
 
 const Home = () => {
   return (
     <>
       <Hero />
+      <CategoryTags />
     </>
   );
 };
