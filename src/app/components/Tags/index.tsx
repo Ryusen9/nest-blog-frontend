@@ -2,6 +2,7 @@
 import { Box, Pill, Select } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import SuggestedBlogs from "./components/SuggestedBlogs";
 
 export default function CategoryTags() {
   const [tags, setTags] = useState<Array<{ name: string }>>([]);
@@ -33,10 +34,12 @@ export default function CategoryTags() {
         : "bg-transparent! text-black! border border-black"
     }`;
   return (
-    <Box className="max-w-7xl border-l border-r px-4 py-6 mx-auto">
+    <Box className="max-w-7xl lg:border-l lg:border-r px-4 py-6 mx-auto">
       <Box className="w-full flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <p className="font-sn-pro text-sm uppercase">Categories</p>
-        <Box className="hidden md:flex items-center justify-center gap-2 flex-wrap">
+        <p className="font-sn-pro text-sm uppercase font-semibold">
+          Categories
+        </p>
+        <Box className="hidden lg:flex items-center justify-center gap-2 flex-wrap">
           <Pill
             onClick={() => handleTagClick("All")}
             className={getTagClasses("All")}
@@ -53,15 +56,17 @@ export default function CategoryTags() {
             </Pill>
           ))}
         </Box>
-        <Box className="block md:hidden">
+        <Box className="block lg:hidden">
           <Select
-            label="Filter by Tags"
             placeholder="Pick one"
             data={tagNames}
             value={activeTag}
             onChange={(value) => handleTagClick(value ?? "All")}
           />
         </Box>
+      </Box>
+      <Box>
+        <SuggestedBlogs tag={activeTag} />
       </Box>
     </Box>
   );
