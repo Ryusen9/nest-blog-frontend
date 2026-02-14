@@ -26,7 +26,7 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(
-          "https://nest-blog-backend-5rpa.onrender.com/post?take=9&published=true",
+          "http://localhost:8000/post?take=9&published=true",
         );
         setBlogs(res.data ?? []);
       } catch (error) {

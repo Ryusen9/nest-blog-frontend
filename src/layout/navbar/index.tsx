@@ -38,11 +38,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full py-3 transition-transform duration-300 ease-out ${
+      className={`fixed z-10000 top-0 left-0 w-full py-3 transition-transform duration-300 ease-out ${
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <Box className="max-w-7xl z-10000 mx-auto flex items-center justify-between px-4 md:px-0 md:pl-4 md:rounded-full">
+      <Box className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-0 md:pl-4 md:rounded-full">
         <p className="font-russo-one text-2xl">Blog</p>
         <Box className="items-center hidden md:flex justify-center gap-5 border py-3 px-6 rounded-full backdrop-blur-lg">
           {navLinks.map((link, idx) => (

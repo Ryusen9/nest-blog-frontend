@@ -10,9 +10,7 @@ export default function CategoryTags() {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get(
-          "https://nest-blog-backend-5rpa.onrender.com/tag",
-        );
+        const res = await axios.get("http://localhost:8000/tag");
         setTags(res.data ?? []);
       } catch (error) {
         console.error("Error fetching tags:", error);
