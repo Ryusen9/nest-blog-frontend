@@ -1,1 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap");
 @import "tailwindcss";
+
+@theme {
+  /* font */
+  --font-russo-one: "Russo One", sans-serif;
+  --font-sn-pro: "SN Pro", sans-serif;
+  /* colors */
+  --color-bg-primary: #F8F3E0
+}
