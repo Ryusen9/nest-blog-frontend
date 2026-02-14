@@ -67,7 +67,7 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
                   height={360}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                 />
-                <Box className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent" />
+                <Box className="absolute inset-0 bg-linear-to-t from-black/40 via-black/5 to-transparent" />
               </Box>
               <Box className="flex h-full flex-col gap-3 p-4">
                 <Box className="flex items-center justify-between text-xs text-neutral-500">

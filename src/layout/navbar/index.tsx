@@ -42,7 +42,7 @@ export default function Navbar() {
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <Box className="max-w-7xl z-10000 mx-auto flex items-center justify-between px-4 md:px-0 md:pl-4 bg-bg-primary md:rounded-full">
+      <Box className="max-w-7xl z-10000 mx-auto flex items-center justify-between px-4 md:px-0 md:pl-4 md:rounded-full">
         <p className="font-russo-one text-2xl">Blog</p>
         <Box className="items-center hidden md:flex justify-center gap-5 border py-3 px-6 rounded-full backdrop-blur-lg">
           {navLinks.map((link, idx) => (
