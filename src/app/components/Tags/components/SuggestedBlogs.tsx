@@ -1,10 +1,11 @@
-import { Box, Pill } from "@mantine/core";
+import { Box, Button, Pill } from "@mantine/core";
 import axios from "axios";
-import { Heart, MessageCircle } from "lucide-react";
+import { ArrowRightIcon, Heart, MessageCircle } from "lucide-react";
 import Lottie from "lottie-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import noFile from "../../../../../public/lottie/NoFile.json";
+import Link from "next/link";
 
 type SuggestedBlogsProps = {
   id: number;
@@ -108,6 +109,17 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
                       {t.name}
                     </Pill>
                   ))}
+                </Box>
+                <Box className="mt-3 flex items-center justify-end">
+                  <Link href={`http://localhost:3000/blogs/${blog.slug}`}>
+                    <Button
+                      size="xs"
+                      rightSection={<ArrowRightIcon size={16} />}
+                      className="bg-black! text-white! font-sn-pro!"
+                    >
+                      Read More
+                    </Button>
+                  </Link>
                 </Box>
               </Box>
             </Box>

@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed z-10000 top-0 left-0 w-full py-3 transition-transform duration-300 ease-out ${
+      className={`fixed z-10000 top-0 left-0 w-full py-3 bg-bg-primary md:bg-transparent transition-transform duration-300 ease-out ${
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
