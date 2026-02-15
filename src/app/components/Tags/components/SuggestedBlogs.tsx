@@ -60,7 +60,7 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
               className="group flex h-85 flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-linear-to-b from-white to-neutral-50 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-xl"
               key={idx}
             >
-              <Box className="relative aspect-video overflow-hidden">
+              <Box className="relative h-48 overflow-hidden">
                 <Image
                   src={blog.thumbnail}
                   alt={blog.title}

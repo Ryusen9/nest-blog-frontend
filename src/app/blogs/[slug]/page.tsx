@@ -1,5 +1,6 @@
 "use client";
 import { Box, Modal } from "@mantine/core";
+import { Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -251,13 +252,20 @@ const WithSlug = () => {
               </p>
               <Box className="mt-4 grid gap-3">
                 <Box className="flex items-center justify-between text-sm">
-                  <span className="text-black/60">Likes</span>
+                  <span className="text-black/60">
+                    {" "}
+                    <Heart className="inline mr-1 text-red-400" /> Likes
+                  </span>
                   <span className="font-semibold text-black">
                     {blog?.likes?.length ?? 0}
                   </span>
                 </Box>
                 <Box className="flex items-center justify-between text-sm">
-                  <span className="text-black/60">Comments</span>
+                  <span className="text-black/60">
+                    {" "}
+                    <MessageCircle className="inline mr-1 text-blue-400" />{" "}
+                    Comments
+                  </span>
                   <span className="font-semibold text-black">
                     {blog?.comments?.length ?? 0}
                   </span>
