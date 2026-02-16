@@ -20,6 +20,10 @@ import { useState } from "react";
 import Image from "next/image";
 import googleIcon from "../../../../public/icons/google.svg";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import axios from "axios";
+
+const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 function PasswordRequirement({
   meets,
   label,
@@ -29,13 +33,16 @@ function PasswordRequirement({
 }) {
   return (
     <Text
+      component="div"
       c={meets ? "teal" : "red"}
       style={{ display: "flex", alignItems: "center" }}
       mt={7}
       size="sm"
     >
       {meets ? <Check size={14} /> : <X size={14} />}
-      <Box ml={10}>{label}</Box>
+      <Box component="span" ml={10}>
+        {label}
+      </Box>
     </Text>
   );
 }
@@ -92,6 +99,7 @@ const SignUp = () => {
     },
   });
   const [popoverOpened, setPopoverOpened] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const passwordValue = form.values.password;
   const checks = requirements.map((requirement, index) => (
     <PasswordRequirement
@@ -103,8 +111,34 @@ const SignUp = () => {
 
   const strength = getStrength(passwordValue);
   const color = strength === 100 ? "teal" : strength > 50 ? "yellow" : "red";
+  const passwordsMatch =
+    form.values.password.length > 0 &&
+    form.values.confirmPassword.length > 0 &&
+    form.values.password === form.values.confirmPassword;
+
+  const uploadToImgbb = async (file: File) => {
+    if (!imgbbKey) {
+      throw new Error("Missing Imgbb API key");
+    }
+
+    const imageData = new FormData();
+    imageData.append("key", imgbbKey);
+    imageData.append("image", file);
+
+    const response = await axios.post(
+      "https://api.imgbb.com/1/upload",
+      imageData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    return response.data?.data?.url as string | undefined;
+  };
   return (
-    <Box className="min-h-screen pt-24">
+    <Box className="py-24">
       <Box className="max-w-7xl flex flex-col mx-auto px-4">
         <p className="uppercase font-russo-one text-4xl tracking-widest">
           sign up
@@ -116,7 +150,61 @@ const SignUp = () => {
           <form
             action="#"
             className="flex-1"
-            onSubmit={form.onSubmit(() => {})}
+            onSubmit={form.onSubmit(async (values) => {
+              if (values.password !== values.confirmPassword) {
+                form.setFieldError("confirmPassword", "Passwords do not match");
+                return;
+              }
+
+              if (!values.profilePicture) {
+                form.setFieldError(
+                  "profilePicture",
+                  "Profile picture is required",
+                );
+                return;
+              }
+
+              if (!imgbbKey) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Missing Imgbb API key",
+                  text: "Add NEXT_PUBLIC_IMGBB_API_KEY to your environment.",
+                });
+                return;
+              }
+
+              setIsSubmitting(true);
+              try {
+                const avatarUrl = await uploadToImgbb(values.profilePicture);
+                if (!avatarUrl) {
+                  throw new Error("Imgbb upload failed");
+                }
+
+                await axios.post("http://localhost:8000/user", {
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  email: values.email,
+                  bio: values.bio,
+                  password: values.password,
+                  avatarUrl,
+                  role: "reader",
+                });
+                Swal.fire({
+                  icon: "success",
+                  title: "Account created",
+                  text: "Your account has been created successfully.",
+                });
+                form.reset();
+              } catch (error) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Sign up failed",
+                  text: "Please try again in a moment.",
+                });
+              } finally {
+                setIsSubmitting(false);
+              }
+            })}
           >
             <Fieldset
               legend="Personal Information"
@@ -208,6 +296,8 @@ const SignUp = () => {
               <Button
                 rightSection={<ArrowRight size={16} />}
                 type="submit"
+                disabled={!passwordsMatch || isSubmitting}
+                loading={isSubmitting}
                 className="mt-5 bg-black! rounded-full! font-sn-pro! uppercase! tracking-widest!"
               >
                 Create Account
