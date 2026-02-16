@@ -46,7 +46,7 @@ const BlogsPage = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/tag");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tag`);
         setTags(res.data);
       } catch (error) {
         console.error("Error fetching tags:", error);
@@ -86,7 +86,7 @@ const BlogsPage = () => {
         if (selectedTags && selectedTags !== "ALL") {
           countParams.selectedTag = selectedTags;
         }
-        const res = await axios.get("http://localhost:8000/post/count", {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/post/count`, {
           params: countParams,
         });
         setTotalCount(Number(res.data ?? 0));

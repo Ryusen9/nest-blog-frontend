@@ -180,7 +180,7 @@ const SignUp = () => {
                   throw new Error("Imgbb upload failed");
                 }
 
-                await axios.post("http://localhost:8000/user", {
+                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
                   firstName: values.firstName,
                   lastName: values.lastName,
                   email: values.email,

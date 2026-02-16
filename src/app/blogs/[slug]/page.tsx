@@ -67,7 +67,7 @@ const WithSlug = () => {
     if (!slugValue) return;
     const fetchBlog = async () => {
       try {
-        const blogRes = await fetch(`http://localhost:8000/post/${slugValue}`);
+        const blogRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/${slugValue}`);
         const blogData = await blogRes.json();
         setBlog(blogData);
       } catch (error) {

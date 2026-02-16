@@ -12,13 +12,13 @@ export default function SiteStatus() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await axios.get("http://localhost:8000/user/count");
+        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/count`);
         setUsersCount(userRes.data);
-        const postsRes = await axios.get("http://localhost:8000/post/count");
+        const postsRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/post/count`);
         setPostsCount(postsRes.data);
-        const likesRes = await axios.get("http://localhost:8000/like/count");
+        const likesRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/like/count`);
         setLikesCount(likesRes.data);
-        const commentsRes = await axios.get("http://localhost:8000/comment/count");
+        const commentsRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/comment/count`);
         setCommentsCount(commentsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);

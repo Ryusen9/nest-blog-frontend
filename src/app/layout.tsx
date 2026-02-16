@@ -6,6 +6,7 @@ import logo from "../../public/logo.png";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { MainBackground } from "@/components";
+import AuthBootstrap from "@/components/Auth/AuthBootstrap";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
         cz-shortcut-listen="true"
       >
         <MantineProvider>
+          <AuthBootstrap />
           <Navbar />
           <MainBackground>{children}</MainBackground>
           <Footer />
