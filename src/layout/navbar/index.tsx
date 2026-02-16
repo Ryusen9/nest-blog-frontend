@@ -59,13 +59,13 @@ export default function Navbar() {
           ))}
         </Box>
         <Box className="flex gap-2 pr-4 items-center justify-center">
-          <Link href="/login" className="hidden md:block">
+          <Link href="/sign-up" className="hidden md:block">
             <Button
               className="bg-black! font-sn-pro! text-white! rounded-full! hover:opacity-80! duration-200! cursor-pointer!"
               rightSection={<LogIn size={18} />}
               size="sm"
             >
-              Sign In
+              Sign Up
             </Button>
           </Link>
           <Box className="block md:hidden">
