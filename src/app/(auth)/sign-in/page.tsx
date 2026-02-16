@@ -17,6 +17,9 @@ import Image from "next/image";
 import Link from "next/link";
 import authAnimation from "../../../../public/lottie/auth-animation.json";
 import googleIcon from "../../../../public/icons/google.svg";
+import { AxiosError } from "axios";
+import Swal from "sweetalert2";
+import { api, setAccessToken } from "../../../lib/api";
 
 const SignIn = () => {
   const form = useForm({
@@ -31,7 +34,32 @@ const SignIn = () => {
         value.length >= 6 ? null : "Password should be at least 6 characters",
     },
   });
-
+  const handleLogin = async (values: typeof form.values) => {
+    try {
+      const res = await api.post("/auth/login", values);
+      if (res.status !== 200) {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: res.data.message || "An error occurred during login.",
+        });
+        return;
+      }
+      if (res.data?.access_token) {
+        setAccessToken(res.data.access_token);
+      }
+      console.log(res.data);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text:
+          axiosError.response?.data?.message ||
+          "An error occurred during login.",
+      });
+    }
+  };
   return (
     <Box className="py-24">
       <Box className="max-w-7xl flex flex-col mx-auto px-4">
@@ -44,14 +72,10 @@ const SignIn = () => {
           </Box>
           <form
             className="flex-1"
-            onSubmit={form.onSubmit(() => {})}
+            onSubmit={form.onSubmit(handleLogin)}
             action="#"
           >
-            <Paper
-              radius="lg"
-              shadow="lg"
-              className="bg-transparent! p-10!"
-            >
+            <Paper radius="lg" shadow="lg" className="bg-transparent! p-10!">
               <Text className="mt-2 font-sn-pro text-sm uppercase tracking-widest">
                 Sign in to continue
               </Text>
@@ -68,17 +92,19 @@ const SignIn = () => {
                   required
                   {...form.getInputProps("password")}
                 />
+                <Box className="w-full flex items-center justify-end">
+                  <Link
+                    href="#"
+                    className="text-xs font-semibold font-sn-pro uppercase tracking-widest text-blue-400 hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                </Box>
                 <Box className="flex items-center justify-between">
                   <Checkbox
                     label="Remember me"
                     {...form.getInputProps("remember", { type: "checkbox" })}
                   />
-                  <Link
-                    href="#"
-                    className="text-sm font-semibold font-sn-pro uppercase tracking-widest text-blue-400 hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
                 </Box>
               </Box>
               <Button
