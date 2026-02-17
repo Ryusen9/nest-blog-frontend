@@ -17,11 +17,13 @@ import Image from "next/image";
 import Link from "next/link";
 import authAnimation from "../../../../public/lottie/auth-animation.json";
 import googleIcon from "../../../../public/icons/google.svg";
-import { AxiosError } from "axios";
 import Swal from "sweetalert2";
-import { api, setAccessToken } from "../../../lib/api";
+import { useAuth } from "@/components/Auth/AuthContext";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       email: "",
@@ -35,30 +37,27 @@ const SignIn = () => {
     },
   });
   const handleLogin = async (values: typeof form.values) => {
-    try {
-      const res = await api.post("/auth/login", values);
-      if (res.status !== 200) {
-        Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: res.data.message || "An error occurred during login.",
-        });
-        return;
-      }
-      if (res.data?.access_token) {
-        setAccessToken(res.data.access_token);
-      }
-      console.log(res.data);
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
+    const result = await login({
+      email: values.email,
+      password: values.password,
+      remember: values.remember,
+    });
+
+    if (!result.ok) {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text:
-          axiosError.response?.data?.message ||
-          "An error occurred during login.",
+        text: result.message || "An error occurred during login.",
       });
+      return;
     }
+
+    Swal.fire({
+      icon: "success",
+      title: "Welcome back",
+      text: "You are now signed in.",
+    });
+    router.push("/");
   };
   return (
     <Box className="py-24">

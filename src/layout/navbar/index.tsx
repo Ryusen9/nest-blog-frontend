@@ -1,19 +1,39 @@
 "use client";
 
 import { navLinks } from "@/constants";
-import { Box, Burger, Button, Drawer } from "@mantine/core";
+import {
+  Box,
+  Burger,
+  Button,
+  Drawer,
+  Modal,
+  Avatar,
+  Group,
+  Text,
+  Divider,
+  Badge,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { LogIn } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./components/MobileMenu";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/components/Auth/AuthContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
   const [opened, { toggle }] = useDisclosure();
+  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure();
   const pathName = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    closeModal();
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -59,15 +79,46 @@ export default function Navbar() {
           ))}
         </Box>
         <Box className="flex gap-2 pr-4 items-center justify-center">
-          <Link href="/sign-up" className="hidden md:block">
-            <Button
-              className="bg-black! font-sn-pro! text-white! rounded-full! hover:opacity-80! duration-200! cursor-pointer!"
-              rightSection={<LogIn size={18} />}
-              size="sm"
+          {isAuthenticated && user ? (
+            <Group
+              gap="sm"
+              className="hidden md:flex cursor-pointer hover:opacity-80 transition-opacity px-3 py-2 rounded-lg hover:bg-black/5"
+              onClick={openModal}
             >
-              Sign Up
-            </Button>
-          </Link>
+              {user.avatarUrl ? (
+                <Avatar
+                  src={user.avatarUrl}
+                  alt={user.firstName || user.email || "User"}
+                  size="sm"
+                  radius="xl"
+                />
+              ) : (
+                <Avatar
+                  name={user.firstName || user.email || "User"}
+                  size="sm"
+                  radius="xl"
+                />
+              )}
+              <div className="min-w-0">
+                <Text size="sm" fw={500} className="font-sn-pro truncate">
+                  {user.firstName || user.email || "User"}
+                </Text>
+                <Text size="xs" c="dimmed" className="font-sn-pro truncate">
+                  {user.email}
+                </Text>
+              </div>
+            </Group>
+          ) : (
+            <Link href="/sign-up" className="hidden md:block">
+              <Button
+                className="bg-black! font-sn-pro! text-white! rounded-full! hover:opacity-80! duration-200! cursor-pointer!"
+                rightSection={<LogIn size={18} />}
+                size="sm"
+              >
+                Sign Up
+              </Button>
+            </Link>
+          )}
           <Box className="block md:hidden">
             <Burger
               size="sm"
@@ -97,6 +148,113 @@ export default function Navbar() {
       >
         <MobileMenu />
       </Drawer>
+
+      <Modal
+        opened={modalOpened}
+        onClose={closeModal}
+        title={
+          <Text fw={700} className="font-sn-pro uppercase tracking-widest text-lg">
+            User Profile
+          </Text>
+        }
+        centered
+        size="md"
+      >
+        {user && (
+          <Box>
+            <Group justify="center" mb="lg">
+              {user.avatarUrl ? (
+                <Avatar
+                  src={user.avatarUrl}
+                  alt={user.firstName || user.email || "User"}
+                  size={80}
+                  radius="xl"
+                />
+              ) : (
+                <Avatar
+                  name={user.firstName || user.email || "User"}
+                  size={80}
+                  radius="xl"
+                />
+              )}
+            </Group>
+
+            <Box className="space-y-4">
+              <Box>
+                <Text
+                  size="xs"
+                  c="dimmed"
+                  fw={500}
+                  className="font-sn-pro uppercase tracking-wider"
+                >
+                  Full Name
+                </Text>
+                <Text className="font-sn-pro">
+                  {user.firstName && user.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user.firstName || "Not provided"}
+                </Text>
+              </Box>
+
+              <Box>
+                <Text
+                  size="xs"
+                  c="dimmed"
+                  fw={500}
+                  className="font-sn-pro uppercase tracking-wider"
+                >
+                  Email
+                </Text>
+                <Text className="font-sn-pro">
+                  {user.email || "Not provided"}
+                </Text>
+              </Box>
+
+              {user.bio && (
+                <Box>
+                  <Text
+                    size="xs"
+                    c="dimmed"
+                    fw={500}
+                    className="font-sn-pro uppercase tracking-wider"
+                  >
+                    Bio
+                  </Text>
+                  <Text className="font-sn-pro text-sm">{user.bio}</Text>
+                </Box>
+              )}
+
+              <Box>
+                <Text
+                  size="xs"
+                  c="dimmed"
+                  fw={500}
+                  className="font-sn-pro uppercase tracking-wider"
+                >
+                  Role
+                </Text>
+                <Badge size="lg" variant="filled" className="capitalize">
+                  {user.role || "Not provided"}
+                </Badge>
+              </Box>
+            </Box>
+
+            <Divider my="lg" />
+
+            <Button
+              fullWidth
+              variant="filled"
+              color="red"
+              size="md"
+              className="font-sn-pro! uppercase! tracking-wider!"
+              leftSection={<LogOut size={18} />}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </Box>
+        )}
+      </Modal>
     </nav>
   );
 }

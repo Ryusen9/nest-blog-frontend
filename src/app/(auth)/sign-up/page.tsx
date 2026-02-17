@@ -22,6 +22,8 @@ import googleIcon from "../../../../public/icons/google.svg";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useAuth } from "@/components/Auth/AuthContext";
+import { useRouter } from "next/navigation";
 
 const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 function PasswordRequirement({
@@ -67,6 +69,8 @@ function getStrength(password: string) {
 }
 
 const SignUp = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       firstName: "",
@@ -189,12 +193,29 @@ const SignUp = () => {
                   avatarUrl,
                   role: "reader",
                 });
-                Swal.fire({
-                  icon: "success",
-                  title: "Account created",
-                  text: "Your account has been created successfully.",
+                const loginResult = await login({
+                  email: values.email,
+                  password: values.password,
+                  remember: true,
                 });
-                form.reset();
+
+                if (loginResult.ok) {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Account created",
+                    text: "Welcome! Your account is ready.",
+                  });
+                  form.reset();
+                  router.push("/");
+                } else {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Account created",
+                    text: "Please sign in to continue.",
+                  });
+                  form.reset();
+                  router.push("/sign-in");
+                }
               } catch (error) {
                 Swal.fire({
                   icon: "error",
