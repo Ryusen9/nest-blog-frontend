@@ -18,6 +18,13 @@ const api = axios.create({
   },
 });
 
+/**
+ * The function `refreshAccessToken` asynchronously sends a POST request to refresh the access token
+ * and returns the new access token if successful, otherwise null.
+ * @returns The function `refreshAccessToken` is returning a Promise that resolves to a string value
+ * representing the access token retrieved from the API response. If the access token is not found in
+ * the response data, it will return `null`.
+ */
 const refreshAccessToken = async (): Promise<string | null> => {
   const res = await axios.post(`${API_BASE_URL}/auth/refresh`, null, {
     withCredentials: true,
@@ -36,6 +43,9 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+/* The `api.interceptors.response.use()` function in the provided TypeScript code snippet is setting up
+a response interceptor for the Axios instance named `api`. This interceptor is responsible for
+handling responses from API requests. */
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {

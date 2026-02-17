@@ -1,3 +1,26 @@
+/**
+ * The above TypeScript code defines an authentication context provider and hook for managing user
+ * authentication in a React application.
+ * @property {number | string} id - The `id` property in the `AuthUser` type represents the unique
+ * identifier of the user. It can be either a number or a string.
+ * @property {string} firstName - The `firstName` property in the `AuthUser` type represents the first
+ * name of the authenticated user. It is a string type and is used to store the first name of the user.
+ * @property {string} lastName - The `lastName` property in the `AuthUser` type represents the last
+ * name of the authenticated user. It is a string type and is used to store the last name of the user
+ * in the authentication context.
+ * @property {string} email - The code you provided is a React context for managing user
+ * authentication. It includes functions for logging in, logging out, refreshing tokens, and fetching
+ * user profiles. The `useAuth` hook allows components to access the authentication state.
+ * @property {string} avatarUrl - The `avatarUrl` property in the `AuthUser` type represents the URL of
+ * the user's avatar image. It is a string type that holds the URL where the user's avatar image can be
+ * accessed or displayed. This URL typically points to an image file (e.g., a JPEG or PNG
+ * @property {string} bio - The `bio` property in the `AuthUser` type represents a short biography or
+ * description of the user. It is a string type field where the user can provide information about
+ * themselves, such as their interests, background, or any other relevant details they want to share.
+ * @property {string} role - The `role` property in the `AuthUser` type represents the role or
+ * permission level of the authenticated user. It is typically used to determine what actions or
+ * resources a user can access within an application based on their assigned role.
+ */
 "use client";
 
 import { api, refreshAccessToken, setAccessToken } from "@/lib/api";
@@ -43,6 +66,18 @@ const ACCESS_TOKEN_COOKIE = "access_token";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+/**
+ * The function `normalizeUser` takes an unknown payload and extracts relevant user information to
+ * return an `AuthUser` object or null.
+ * @param {unknown} payload - The `normalizeUser` function takes a `payload` parameter of type
+ * `unknown` and attempts to extract user information from it to create an `AuthUser` object. The
+ * function first checks if the `payload` is an object and then tries to find user information within
+ * it. It handles different possible
+ * @returns The `normalizeUser` function returns an `AuthUser` object or `null`. The `AuthUser` object
+ * has properties `id`, `firstName`, `lastName`, `email`, `avatarUrl`, `bio`, and `role`, which are
+ * extracted from the `payload` object passed to the function. If the `payload` is not in the expected
+ * format or if the necessary properties are not
+ */
 const normalizeUser = (payload: unknown): AuthUser | null => {
   if (!payload || typeof payload !== "object") return null;
 
@@ -79,6 +114,16 @@ const normalizeUser = (payload: unknown): AuthUser | null => {
   };
 };
 
+/**
+ * The `getCookie` function retrieves the value of a specified cookie by parsing the document's
+ * cookies.
+ * @param {string} name - The `name` parameter in the `getCookie` function is a string that represents
+ * the name of the cookie you want to retrieve from the document's cookies.
+ * @returns The `getCookie` function returns the value of the cookie with the specified name if it
+ * exists in the document's cookies. If the cookie is found, it decodes and returns the value. If the
+ * cookie is not found or if the `document` object is not available (for example, in a non-browser
+ * environment), it returns `null`.
+ */
 const getCookie = (name: string) => {
   if (typeof document === "undefined") return null;
   const value = `; ${document.cookie}`;
@@ -89,6 +134,17 @@ const getCookie = (name: string) => {
   return null;
 };
 
+/**
+ * The `setCookie` function sets a cookie with the specified name and value in a TypeScript React
+ * environment.
+ * @param {string} name - The `name` parameter is a string representing the name of the cookie that you
+ * want to set.
+ * @param {string} value - The `value` parameter in the `setCookie` function represents the value that
+ * you want to store in the cookie. This value can be a string containing any data that you want to
+ * save and retrieve later when the cookie is accessed.
+ * @returns If the `document` object is not defined (i.e., if the code is running in a non-browser
+ * environment), the function will return early and not execute the rest of the code.
+ */
 const setCookie = (name: string, value: string) => {
   if (typeof document === "undefined") return;
   const secure =
@@ -141,6 +197,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+/* The above code is a TypeScript React function using the `useCallback` hook to handle a login
+process. Here is a breakdown of what the code is doing: */
   const login = useCallback(async (payload: LoginPayload) => {
     setIsLoading(true);
     try {
