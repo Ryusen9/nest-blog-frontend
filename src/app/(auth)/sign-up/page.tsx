@@ -25,7 +25,6 @@ import axios from "axios";
 import { useAuth } from "@/components/Auth/AuthContext";
 import { useRouter } from "next/navigation";
 
-const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 function PasswordRequirement({
   meets,
   label,
@@ -120,26 +119,23 @@ const SignUp = () => {
     form.values.confirmPassword.length > 0 &&
     form.values.password === form.values.confirmPassword;
 
-  const uploadToImgbb = async (file: File) => {
-    if (!imgbbKey) {
-      throw new Error("Missing Imgbb API key");
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/file-upload/image`,
+        formData,
+      );
+      return res.data.url;
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Image upload failed",
+        text:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
     }
-
-    const imageData = new FormData();
-    imageData.append("key", imgbbKey);
-    imageData.append("image", file);
-
-    const response = await axios.post(
-      "https://api.imgbb.com/1/upload",
-      imageData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
-
-    return response.data?.data?.url as string | undefined;
   };
   return (
     <Box className="py-24">
@@ -167,21 +163,13 @@ const SignUp = () => {
                 );
                 return;
               }
-
-              if (!imgbbKey) {
-                Swal.fire({
-                  icon: "error",
-                  title: "Missing Imgbb API key",
-                  text: "Add NEXT_PUBLIC_IMGBB_API_KEY to your environment.",
-                });
-                return;
-              }
-
               setIsSubmitting(true);
               try {
-                const avatarUrl = await uploadToImgbb(values.profilePicture);
+                const avatarUrl = await uploadImageToCloudinary(
+                  values.profilePicture,
+                );
                 if (!avatarUrl) {
-                  throw new Error("Imgbb upload failed");
+                  throw new Error("Cloudinary upload failed");
                 }
 
                 await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
@@ -193,6 +181,7 @@ const SignUp = () => {
                   avatarUrl,
                   role: "reader",
                 });
+
                 const loginResult = await login({
                   email: values.email,
                   password: values.password,
