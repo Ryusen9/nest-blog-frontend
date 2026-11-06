@@ -1,4 +1,5 @@
 "use client";
+import { api } from "@/lib/api";
 import { Box, Modal } from "@mantine/core";
 import { Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
@@ -67,9 +68,8 @@ const WithSlug = () => {
     if (!slugValue) return;
     const fetchBlog = async () => {
       try {
-        const blogRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/${slugValue}`);
-        const blogData = await blogRes.json();
-        setBlog(blogData);
+        const blogRes = await api.get(`/post/${slugValue}`);
+        setBlog(blogRes.data);
       } catch (error) {
         console.error("Error fetching blog:", error);
       }

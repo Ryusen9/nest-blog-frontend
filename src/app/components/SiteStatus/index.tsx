@@ -1,6 +1,6 @@
 "use client";
 import { Box } from "@mantine/core";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { FileText, Heart, MessageCircle, Users } from "lucide-react";
 
@@ -12,13 +12,13 @@ export default function SiteStatus() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/count`);
+        const userRes = await api.get("/user/count");
         setUsersCount(userRes.data);
-        const postsRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/post/count`);
+        const postsRes = await api.get("/post/count");
         setPostsCount(postsRes.data);
-        const likesRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/like/count`);
+        const likesRes = await api.get("/like/count");
         setLikesCount(likesRes.data);
-        const commentsRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/comment/count`);
+        const commentsRes = await api.get("/comment/count");
         setCommentsCount(commentsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);

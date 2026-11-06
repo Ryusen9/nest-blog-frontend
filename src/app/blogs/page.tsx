@@ -7,7 +7,7 @@ import {
   SegmentedControl,
   Select,
 } from "@mantine/core";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { ArrowRightIcon, Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,7 +46,7 @@ const BlogsPage = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tag`);
+        const res = await api.get("/tag");
         setTags(res.data);
       } catch (error) {
         console.error("Error fetching tags:", error);
@@ -68,7 +68,7 @@ const BlogsPage = () => {
         if (selectedTags && selectedTags !== "ALL") {
           params.selectedTag = selectedTags;
         }
-        const res = await axios.get("http://localhost:8000/post", { params });
+        const res = await api.get("/post", { params });
         setBlogs(res.data ?? []);
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -86,7 +86,7 @@ const BlogsPage = () => {
         if (selectedTags && selectedTags !== "ALL") {
           countParams.selectedTag = selectedTags;
         }
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/post/count`, {
+        const res = await api.get("/post/count", {
           params: countParams,
         });
         setTotalCount(Number(res.data ?? 0));
@@ -209,7 +209,7 @@ const BlogsPage = () => {
                   ))}
                 </Box>
                 <Box className="mt-3 flex items-center justify-end">
-                  <Link href={`http://localhost:3000/blogs/${blog.slug}`}>
+                  <Link href={`/blogs/${blog.slug}`}>
                     <Button
                       size="xs"
                       rightSection={<ArrowRightIcon size={16} />}

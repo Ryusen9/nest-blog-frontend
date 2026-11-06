@@ -21,7 +21,7 @@ import Image from "next/image";
 import googleIcon from "../../../../public/icons/google.svg";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { useAuth } from "@/components/Auth/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -123,10 +123,7 @@ const SignUp = () => {
     const formData = new FormData();
     formData.append("image", file);
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/file-upload/image`,
-        formData,
-      );
+      const res = await api.post("/file-upload/image", formData);
       return res.data.url;
     } catch (error) {
       Swal.fire({
@@ -172,7 +169,7 @@ const SignUp = () => {
                   throw new Error("Cloudinary upload failed");
                 }
 
-                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+                await api.post("/user", {
                   firstName: values.firstName,
                   lastName: values.lastName,
                   email: values.email,

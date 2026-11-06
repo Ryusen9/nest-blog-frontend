@@ -1,5 +1,5 @@
 import { Box, Button, Pill } from "@mantine/core";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { ArrowRightIcon, Heart, MessageCircle } from "lucide-react";
 import Lottie from "lottie-react";
 import Image from "next/image";
@@ -26,9 +26,9 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/post?take=9&published=true",
-        );
+        const res = await api.get("/post", {
+          params: { take: 9, published: true },
+        });
         setBlogs(res.data ?? []);
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -111,7 +111,7 @@ const SuggestedBlogs = ({ tag }: { tag: string }) => {
                   ))}
                 </Box>
                 <Box className="mt-3 flex items-center justify-end">
-                  <Link href={`http://localhost:3000/blogs/${blog.slug}`}>
+                  <Link href={`/blogs/${blog.slug}`}>
                     <Button
                       size="xs"
                       rightSection={<ArrowRightIcon size={16} />}

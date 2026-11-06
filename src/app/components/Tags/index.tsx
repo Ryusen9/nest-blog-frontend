@@ -1,6 +1,6 @@
 "use client";
 import { Box, Pill, Select } from "@mantine/core";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import SuggestedBlogs from "./components/SuggestedBlogs";
 
@@ -10,7 +10,7 @@ export default function CategoryTags() {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tag`);
+        const res = await api.get("/tag");
         setTags(res.data ?? []);
       } catch (error) {
         console.error("Error fetching tags:", error);
